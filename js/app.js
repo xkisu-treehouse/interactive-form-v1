@@ -168,6 +168,8 @@ $(document).ready(function() {
             })
             // display the cost
         $('#activity-cost').html(`Total: $${totalPrice}`);
+
+        validateActivities();
     })
 
     // detect when the user selected a payment method
@@ -207,12 +209,15 @@ $(document).ready(function() {
         if (validateEmail() && !errors)
             errors = true;
 
-        // clear any previous errors
-        $('#activity-error').html('');
+        if (validateActivities() && !errors)
+            errors = true;
 
-        // if no activities are selected
-        if (selectedActivities.length == 0) {
-            $('#activity-error').append('<p>Please select at least 1 activity</p>');
+        // clear any previous errors
+        $('#shirt-error').html();
+
+        // if a shirt isn't selected
+        if ($('#design').val() == 'select') {
+            $('#shirt-error').append('Please select a shirt');
             errors = true;
         }
 
@@ -233,6 +238,25 @@ $(document).ready(function() {
             if (validateCreditCardCVV() && !errors)
                 errors = true;
         }
+        // if a payment method hasn't been selected
+        if ($('#payment').val() == 'select_method') {
+            $('#payment-error').append('Please selected a payment method')
+            errors = true;
+        }
+        return errors;
+    }
+
+    function validateActivities() {
+        var errors = false;
+        // clear any previous errors
+        $('#activity-error').html('');
+
+        // if no activities are selected
+        if (selectedActivities.length == 0) {
+            $('#activity-error').append('<p>Please select at least 1 activity</p>');
+            errors = true;
+        }
+
         return errors;
     }
 
@@ -419,5 +443,17 @@ $(document).ready(function() {
     // hide color label and select menu
     $('#colors').hide();
     // show when a design is selected
-    $('#design').change(() => $('#colors').show())
+    $('#design').change(function() {
+        if ($('#design').val() == 'select') {
+            $('#colors').hide();
+            $('#colors').css({
+                'display': 'none'
+            })
+        } else {
+            $('#colors').show();
+            $('#colors').css({
+                'display': 'block'
+            })
+        }
+    })
 });
